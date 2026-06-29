@@ -1,0 +1,169 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Book {
+    string title;
+    string author;
+    string isbn;
+    bool available;
+};
+
+int main() {
+    vector<Book> library;
+    int choice;
+
+    do {
+        cout << "\n===== LIBRARY MANAGEMENT SYSTEM =====\n";
+        cout << "1. Add Book\n";
+        cout << "2. Search Book\n";
+        cout << "3. Check Out Book\n";
+        cout << "4. Return Book\n";
+        cout << "5. Calculate Fine\n";
+        cout << "6. Display All Books\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+
+        switch (choice) {
+
+        case 1: {
+            Book b;
+            cout << "Enter Book Title: ";
+            getline(cin, b.title);
+
+            cout << "Enter Author Name: ";
+            getline(cin, b.author);
+
+            cout << "Enter ISBN: ";
+            getline(cin, b.isbn);
+
+            b.available = true;
+            library.push_back(b);
+
+            cout << "Book added successfully!\n";
+            break;
+        }
+
+        case 2: {
+            string key;
+            cout << "Enter Title, Author, or ISBN: ";
+            getline(cin, key);
+
+            bool found = false;
+            for (int i = 0; i < library.size(); i++) {
+                if (library[i].title == key ||
+                    library[i].author == key ||
+                    library[i].isbn == key) {
+
+                    cout << "\nTitle : " << library[i].title;
+                    cout << "\nAuthor: " << library[i].author;
+                    cout << "\nISBN  : " << library[i].isbn;
+                    cout << "\nStatus: "
+                         << (library[i].available ? "Available" : "Checked Out")
+                         << endl;
+
+                    found = true;
+                }
+            }
+
+            if (!found)
+                cout << "Book not found.\n";
+
+            break;
+        }
+
+        case 3: {
+            string isbn;
+            cout << "Enter ISBN to Check Out: ";
+            getline(cin, isbn);
+
+            bool found = false;
+
+            for (int i = 0; i < library.size(); i++) {
+                if (library[i].isbn == isbn) {
+                    found = true;
+
+                    if (library[i].available) {
+                        library[i].available = false;
+                        cout << "Book checked out successfully.\n";
+                    } else {
+                        cout << "Book is already checked out.\n";
+                    }
+                }
+            }
+
+            if (!found)
+                cout << "Book not found.\n";
+
+            break;
+        }
+
+        case 4: {
+            string isbn;
+            cout << "Enter ISBN to Return: ";
+            getline(cin, isbn);
+
+            bool found = false;
+
+            for (int i = 0; i < library.size(); i++) {
+                if (library[i].isbn == isbn) {
+                    found = true;
+                    library[i].available = true;
+                    cout << "Book returned successfully.\n";
+                }
+            }
+
+            if (!found)
+                cout << "Book not found.\n";
+
+            break;
+        }
+
+        case 5: {
+            int days;
+            double fine;
+
+            cout << "Enter overdue days: ";
+            cin >> days;
+
+            if (days <= 7)
+                fine = 0;
+            else
+                fine = (days - 7) * 5;   // Rs.5 per extra day
+
+            cout << "Fine Amount = Rs." << fine << endl;
+            break;
+        }
+
+        case 6: {
+            if (library.empty()) {
+                cout << "No books in library.\n";
+            } else {
+                cout << "\nBook List:\n";
+
+                for (int i = 0; i < library.size(); i++) {
+                    cout << "\nTitle : " << library[i].title;
+                    cout << "\nAuthor: " << library[i].author;
+                    cout << "\nISBN  : " << library[i].isbn;
+                    cout << "\nStatus: "
+                         << (library[i].available ? "Available" : "Checked Out")
+                         << "\n";
+                }
+            }
+            break;
+        }
+
+        case 7:
+            cout << "Thank You!\n";
+            break;
+
+        default:
+            cout << "Invalid Choice!\n";
+        }
+
+    } while (choice != 7);
+
+    return 0;
+}
